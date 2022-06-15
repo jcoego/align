@@ -36,7 +36,6 @@ function App() {
     setState({...state, showTable: true, selectedCell: selectedCellAux});
   }
 
-  console.log('stateHIS',state.selectedCellHis)
 
   const handleKeyPress  = useCallback((e) =>{
    
@@ -133,13 +132,13 @@ function App() {
            <br/>
            {
              state.showTable ? (
-              <table onKeyPress={e => console.log('hi')} >
+              <table >
                 {
                   arrOfCells && arrOfCells.map((index)=>(
-                    <tr>
+                    <tr key={index}>
                       {
                         arrOfCells && arrOfCells.map((index1) =>(
-                          <th style={state.selectedCell.row===index && state.selectedCell.col===index1 ?  
+                          <th key={index+''+index1} style={state.selectedCell.row===index && state.selectedCell.col===index1 ?  
                             cellStyle :cellStyleSelected}>
                             </th>
                         ))

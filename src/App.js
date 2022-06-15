@@ -22,7 +22,8 @@ const cellStyleSelected = {
 function App() {
 
   const [state, setState] = useState(defaultState);
-  const [selectedCell, setSelectedCell] = useState({row:0, col:0})
+  const [selectedCell, setSelectedCell] = useState({row:0, col:0});
+  const [activeCellHis, setActiveCellHis] = useState([])
 
   const handleOnChange = ({name='',value=''}) => {
     setState({...state,[name]:+value})
@@ -34,9 +35,26 @@ function App() {
     setSelectedCell(selectedCellAux)
   }
 
-  const handleKeyPress  = useCallback((key) =>{
+  const handleKeyPress  = useCallback((e) =>{
     if(!state.showTable) return;
-    alert('hi')
+    switch(e.key){
+      case 'ArrowUp':
+       
+        break;
+      case 'ArrowRight':
+        break;
+      case 'ArrowDown':
+        break;
+      case 'ArrowLeft':
+        break;
+    }
+    alert(e.key)
+    
+    
+    
+    
+
+
   },[state.showTable])
 
   useEffect(()=>{

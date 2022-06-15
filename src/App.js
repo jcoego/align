@@ -25,7 +25,6 @@ const cellStyleSelected = {
 function App() {
 
   const [state, setState] = useState(defaultState);
-  const [activeCellHis, setActiveCellHis] = useState([])
 
   const handleOnChange = ({name='',value=''}) => {
     setState({...state,[name]:+value})
@@ -133,6 +132,7 @@ function App() {
            {
              state.showTable ? (
               <table >
+                <tbody>
                 {
                   arrOfCells && arrOfCells.map((index)=>(
                     <tr key={index}>
@@ -147,6 +147,7 @@ function App() {
                   ))
                   
                 }
+              </tbody>
             </table>) : (
              <>
              
@@ -155,7 +156,7 @@ function App() {
                 {
                   state.selectedCellHis && state.selectedCellHis.map((cell)=>(
 
-                    <li>{`Row: ${cell.row}-Col:${cell.col}`}</li>
+                    <li key={cell.row+'-'+cell.col}>{`Row: ${cell.row}-Col:${cell.col}`}</li>
                   ))
 
                 }

@@ -43,51 +43,54 @@ function App() {
       case 'ArrowUp':
         setState(prevState => {
           if(prevState.selectedCell.row === 0) return prevState;
+          let selectCellAux = {...prevState.selectedCell, row: +prevState.selectedCell.row-1}
           return {...prevState, 
-            selectedCell: {...prevState.selectedCell, row: +prevState.selectedCell.row-1}
+            selectedCell: selectCellAux,
+            selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
           }
         })
         break;
       case 'ArrowRight':
         setState(prevState => {
           if(prevState.selectedCell.col === prevState.boardSize -1) return prevState;
+          let selectCellAux =  {...prevState.selectedCell, col: +prevState.selectedCell.col+1}
             return {...prevState, 
-              selectedCell: {...prevState.selectedCell, col: +prevState.selectedCell.col+1}
+              selectedCell:selectCellAux,
+              selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
             }
           })
         break;
       case 'ArrowDown':
         setState(prevState => {
           if(prevState.selectedCell.row === prevState.boardSize -1) return prevState;
+            let selectCellAux = {...prevState.selectedCell, row: +prevState.selectedCell.row+1}
             return {...prevState, 
-              selectedCell: {...prevState.selectedCell, row: +prevState.selectedCell.row+1}
+              selectedCell: selectCellAux,
+              selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
             }
           })
         break;
       case 'ArrowLeft':
         setState(prevState => {
           if(prevState.selectedCell.col === 0) return prevState;
+          let selectCellAux = {...prevState.selectedCell, col: +prevState.selectedCell.col-1}
           return {...prevState, 
-            selectedCell: {...prevState.selectedCell, col: +prevState.selectedCell.col-1}
+            selectedCell: selectCellAux,
+            selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
           }
         })
         break;
     }
-   
-    
-    
-    
-    
 
-
-  },[state.showTable])
+  },[])
 
   useEffect(()=>{
+    if(!state.showTable) return;
     document.addEventListener('keydown',handleKeyPress)
     return ()=>{
       document.removeEventListener('keydown',handleKeyPress)
     }
-  },[])
+  },[state.showTable])
 
 
 

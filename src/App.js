@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback}  from 'react';
+import React, {useEffect, useState, useCallback, useReducer}  from 'react';
 
 import {setRandomCell} from './utils/utils'
 
@@ -6,6 +6,9 @@ const defaultState = {
   boardSize : 5, //TODO: Change to 0
   availableSteps: 0,
   showTable: true, //TODO: Change to false.
+  selectedCell: {row: 0, col:0},
+  nSteps:0,
+  selectedCellHis:[]
 }
 
 const cellStyle = {
@@ -22,7 +25,6 @@ const cellStyleSelected = {
 function App() {
 
   const [state, setState] = useState(defaultState);
-  const [selectedCell, setSelectedCell] = useState({row:0, col:0});
   const [activeCellHis, setActiveCellHis] = useState([])
 
   const handleOnChange = ({name='',value=''}) => {
@@ -30,25 +32,48 @@ function App() {
   }
 
   const handleClick = () =>{
-    setState({...state, showTable: true});
     let selectedCellAux = setRandomCell(state.boardSize);
-    setSelectedCell(selectedCellAux)
+    setState({...state, showTable: true, selectedCell: selectedCellAux});
   }
 
   const handleKeyPress  = useCallback((e) =>{
+    debugger
     if(!state.showTable) return;
     switch(e.key){
       case 'ArrowUp':
-       
+        setState(prevState => {
+          if(prevState.selectedCell.row === 0) return prevState;
+          return {...prevState, 
+            selectedCell: {...prevState.selectedCell, row: +prevState.selectedCell.row-1}
+          }
+        })
         break;
       case 'ArrowRight':
+        setState(prevState => {
+          if(prevState.selectedCell.col === prevState.boardSize -1) return prevState;
+            return {...prevState, 
+              selectedCell: {...prevState.selectedCell, col: +prevState.selectedCell.col+1}
+            }
+          })
         break;
       case 'ArrowDown':
+        setState(prevState => {
+          if(prevState.selectedCell.row === prevState.boardSize -1) return prevState;
+            return {...prevState, 
+              selectedCell: {...prevState.selectedCell, row: +prevState.selectedCell.row+1}
+            }
+          })
         break;
       case 'ArrowLeft':
+        setState(prevState => {
+          if(prevState.selectedCell.col === 0) return prevState;
+          return {...prevState, 
+            selectedCell: {...prevState.selectedCell, col: +prevState.selectedCell.col-1}
+          }
+        })
         break;
     }
-    alert(e.key)
+   
     
     
     
@@ -98,7 +123,7 @@ function App() {
                     <tr>
                       {
                         arrOfCells && arrOfCells.map((index1) =>(
-                          <th style={selectedCell.row===index && selectedCell.col===index1 ?  
+                          <th style={state.selectedCell.row===index && state.selectedCell.col===index1 ?  
                             cellStyle :cellStyleSelected}>
                             </th>
                         ))

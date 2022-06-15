@@ -3,9 +3,9 @@ import React, {useEffect, useState, useCallback, useReducer}  from 'react';
 import {setRandomCell} from './utils/utils'
 
 const defaultState = {
-  boardSize : 5, //TODO: Change to 0
-  availableSteps: 0,
-  showTable: true, //TODO: Change to false.
+  boardSize : 5, 
+  availableSteps: 2,
+  showTable: false, 
   selectedCell: {row: 0, col:0},
   nSteps:0,
   selectedCellHis:[]
@@ -32,21 +32,25 @@ function App() {
   }
 
   const handleClick = () =>{
-    let selectedCellAux = setRandomCell(state.boardSize);
+    let selectedCellAux = setRandomCell(+state.boardSize);
     setState({...state, showTable: true, selectedCell: selectedCellAux});
   }
 
+  console.log('stateHIS',state.selectedCellHis)
+
   const handleKeyPress  = useCallback((e) =>{
-    debugger
     if(!state.showTable) return;
     switch(e.key){
       case 'ArrowUp':
         setState(prevState => {
           if(prevState.selectedCell.row === 0) return prevState;
           let selectCellAux = {...prevState.selectedCell, row: +prevState.selectedCell.row-1}
+          let end = !!(+prevState.nSteps +1 >= +prevState.availableSteps) 
           return {...prevState, 
             selectedCell: selectCellAux,
-            selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
+            selectedCellHis: [...prevState.selectedCellHis, selectCellAux],
+            showTable: !end,
+            nSteps: !end ? +prevState.nSteps +1 : +prevState.nSteps
           }
         })
         break;
@@ -54,9 +58,12 @@ function App() {
         setState(prevState => {
           if(prevState.selectedCell.col === prevState.boardSize -1) return prevState;
           let selectCellAux =  {...prevState.selectedCell, col: +prevState.selectedCell.col+1}
+          let end = !!(+prevState.nSteps +1 >= +prevState.availableSteps) 
             return {...prevState, 
               selectedCell:selectCellAux,
-              selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
+              selectedCellHis: [...prevState.selectedCellHis, selectCellAux],
+              showTable: !end,
+              nSteps: !end ? +prevState.nSteps +1 : +prevState.nSteps
             }
           })
         break;
@@ -64,9 +71,12 @@ function App() {
         setState(prevState => {
           if(prevState.selectedCell.row === prevState.boardSize -1) return prevState;
             let selectCellAux = {...prevState.selectedCell, row: +prevState.selectedCell.row+1}
+            let end = !!(+prevState.nSteps +1 >= +prevState.availableSteps) 
             return {...prevState, 
               selectedCell: selectCellAux,
-              selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
+              selectedCellHis: [...prevState.selectedCellHis, selectCellAux],
+              showTable: !end,
+              nSteps: !end ? +prevState.nSteps +1 : +prevState.nSteps
             }
           })
         break;
@@ -74,18 +84,21 @@ function App() {
         setState(prevState => {
           if(prevState.selectedCell.col === 0) return prevState;
           let selectCellAux = {...prevState.selectedCell, col: +prevState.selectedCell.col-1}
+          let end = !!(+prevState.nSteps +1 >= +prevState.availableSteps) 
           return {...prevState, 
             selectedCell: selectCellAux,
-            selectedCellHis: [...prevState.selectedCellHis, selectCellAux]
+            selectedCellHis: [...prevState.selectedCellHis, selectCellAux],
+            showTable: !end,
+            nSteps: !end ? +prevState.nSteps +1 : +prevState.nSteps
           }
         })
         break;
     }
 
-  },[])
+  },[state.showTable])
 
   useEffect(()=>{
-    if(!state.showTable) return;
+  
     document.addEventListener('keydown',handleKeyPress)
     return ()=>{
       document.removeEventListener('keydown',handleKeyPress)
@@ -119,7 +132,7 @@ function App() {
            <br />
            <br/>
            {
-             state.showTable && (
+             state.showTable ? (
               <table onKeyPress={e => console.log('hi')} >
                 {
                   arrOfCells && arrOfCells.map((index)=>(
@@ -135,7 +148,22 @@ function App() {
                   ))
                   
                 }
-            </table>)
+            </table>) : (
+             <>
+             
+              <ul>
+               
+                {
+                  state.selectedCellHis && state.selectedCellHis.map((cell)=>(
+
+                    <li>{`Row: ${cell.row}-Col:${cell.col}`}</li>
+                  ))
+
+                }
+                </ul>
+              </>
+              
+            )
            }
            
            

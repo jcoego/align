@@ -98,7 +98,7 @@ function App() {
   },[])
 
   useEffect(()=>{
-  
+    if(!state.showTable) return;
     document.addEventListener('keydown',handleKeyPress)
     return ()=>{
       document.removeEventListener('keydown',handleKeyPress)

@@ -39,7 +39,7 @@ function App() {
   console.log('stateHIS',state.selectedCellHis)
 
   const handleKeyPress  = useCallback((e) =>{
-    if(!state.showTable) return;
+   
     switch(e.key){
       case 'ArrowUp':
         setState(prevState => {
@@ -95,7 +95,7 @@ function App() {
         break;
     }
 
-  },[state.showTable])
+  },[])
 
   useEffect(()=>{
   

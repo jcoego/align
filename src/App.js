@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useReducer}  from 'react';
+import React, {useEffect, useState, useCallback, useReducer, useMemo}  from 'react';
 
 import {setRandomCell} from './utils/utils'
 
@@ -11,15 +11,30 @@ const defaultState = {
   selectedCellHis:[]
 }
 
-const cellStyle = {
+const cellStyleBase = {
   border: '1px solid grey',
   padding: '20px'
 }
 
+const cellStyleColor1 = {
+  ...cellStyleBase,
+  backgroundColor: 'grey'
+}
+
 const cellStyleSelected = {
-  ...cellStyle,
+  ...cellStyleBase,
   backgroundColor:'red'
 }
+
+export const getCellInitColor = (col,row)=>{
+  if((+col+row)%2 === 0){
+    return cellStyleBase
+  }else {
+    return cellStyleColor1
+  }
+}
+
+
 
 
 function App() {
@@ -104,11 +119,22 @@ function App() {
   },[state.showTable])
 
 
+  const handleClickStartOver = ()=>{
+    setState(defaultState);
+  }
 
-  let arrOfCells = []
+/*   let arrOfCells = []
   for(let i=0; i< state.boardSize ; i++){
     arrOfCells.push(i)
-  }
+  } */
+
+  let arrOfCells = useMemo(()=>{
+    let arrOfCellsAux =[]
+    for(let i=0; i< state.boardSize ; i++){
+      arrOfCellsAux.push(i)
+    } 
+    return arrOfCellsAux;
+  },[state.boardSize])
 
 
   return (
@@ -126,7 +152,7 @@ function App() {
                 onChange={e => handleOnChange({name:'availableSteps', value:e.target.value})} 
               />
            </div>
-           <button onClick={e => handleClick()}>OK</button>
+           {!state.showTable && (+state.nSteps +1 < +state.availableSteps) && <button onClick={e => handleClick()}>OK</button>}
            <br />
            <br/>
            {
@@ -139,7 +165,7 @@ function App() {
                       {
                         arrOfCells && arrOfCells.map((index1) =>(
                           <th key={index+''+index1} style={state.selectedCell.row===index && state.selectedCell.col===index1 ?  
-                            cellStyle :cellStyleSelected}>
+                            cellStyleSelected :getCellInitColor(index,index1)}>
                             </th>
                         ))
                       }
@@ -150,9 +176,11 @@ function App() {
               </tbody>
             </table>) : (
              <>
+                { +state.nSteps +1 >= +state.availableSteps && (
+                  <h2>Thank you. your steps</h2>
+                )}
              
-              <ul>
-               
+              <ul>   
                 {
                   state.selectedCellHis && state.selectedCellHis.map((cell)=>(
 
@@ -161,6 +189,9 @@ function App() {
 
                 }
                 </ul>
+                { +state.nSteps +1 >= +state.availableSteps && (
+                  <button onClick = {e => handleClickStartOver()}>Start over</button>
+                )}
               </>
               
             )

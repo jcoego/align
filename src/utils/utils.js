@@ -5,3 +5,4 @@ export const setRandomCell = (size=1) =>{
     }
     return res;
 }
+
